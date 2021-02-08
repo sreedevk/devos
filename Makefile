@@ -1,2 +1,2 @@
-PROJECT_NAME := nvs-rw-value
+PROJECT_NAME := devos
 include $(IDF_PATH)/make/project.mk
