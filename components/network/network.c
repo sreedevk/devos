@@ -62,7 +62,9 @@ void wifi_init_sta(void) {
 
   EventBits_t bits = xEventGroupWaitBits(s_wifi_event_group, WIFI_CONNECTED_BIT | WIFI_FAIL_BIT, pdFALSE, pdFALSE, portMAX_DELAY);
 
-  if (bits & WIFI_CONNECTED_BIT) { ESP_LOGI(TAG, "Connected to SSID: %s", WIFI_SSID); } 
+  if (bits & WIFI_CONNECTED_BIT) {
+    ESP_LOGI(TAG, "Connected to SSID: %s", WIFI_SSID);
+  } 
   else { ESP_LOGE(TAG, "UNEXPECTED EVENT"); }
 
   ESP_ERROR_CHECK(esp_event_handler_instance_unregister(IP_EVENT, IP_EVENT_STA_GOT_IP, instance_got_ip));

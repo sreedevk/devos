@@ -35,4 +35,5 @@ void    u8g2_esp32_hal_init(u8g2_esp32_hal_t u8g2_esp32_hal_param);
 uint8_t u8g2_esp32_spi_byte_cb(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 uint8_t u8g2_esp32_i2c_byte_cb(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 uint8_t u8g2_esp32_gpio_and_delay_cb(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
-void display_test();
+void initialize_display();
+void initialize_u8g2(u8g2_t *display_handler);
