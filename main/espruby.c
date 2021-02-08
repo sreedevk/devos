@@ -26,6 +26,7 @@ void app_main(void) {
   xTaskCreate(&task_wifi_connect, "task_wifi_connect", 4096, NULL, 5, NULL);
   load_splash(&u8g2);
   httpd_handle_t server = start_webserver();
+  load_network_info(&u8g2);
   init_audio_mapping(&u8g2);
   stop_webserver(server);
   fflush(stdout);

@@ -12,6 +12,7 @@
 #include "lwip/sys.h"
 #include "lwip/err.h"
 #include "storage.h"
+#include <string.h>
 
 static const char *TAG = "wifi station";
 static EventGroupHandle_t s_wifi_event_group;
@@ -25,6 +26,9 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t e
   } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
     ip_event_got_ip_t* event = (ip_event_got_ip_t*) event_data;
     ESP_LOGI(TAG, "got ip:" IPSTR, IP2STR(&event->ip_info.ip));
+    char ip_string[64];
+    snprintf(ip_string, 64, "%d.%d.%d.%d", IP2STR(&event->ip_info.ip));
+    storage_write_string("local_ip_addr", ip_string);
     xEventGroupSetBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
   }
 }

@@ -12,24 +12,25 @@
 
 void init_audio_mapping(u8g2_t *u8g2){
   int sample;
-  u8g2_ClearBuffer(u8g2);
   int xpix = 0;
-  int ypix = 0;
+  int ypix = 20;
   int prevx = 0;
   int prevy = 0;
   while(true) {
-    xpix = (xpix+1) % 128;
-    sample = adc1_get_raw(ADC1_CHANNEL_6);
-    ypix = 32 - (((double ) sample/4096.0) * 32);
-    u8g2_DrawLine(u8g2, prevx, prevy, xpix, ypix);
-    prevx = xpix;
-    prevy = ypix;
-    u8g2_SendBuffer(u8g2);
     vTaskDelay(5/portTICK_RATE_MS);
     if(xpix == 127) {
-      u8g2_ClearBuffer(u8g2);
+      u8g2_SetDrawColor(u8g2, 0);
+      u8g2_DrawBox(u8g2, 0, 0, 128, 22);
       u8g2_SendBuffer(u8g2);
-    }
+      u8g2_SetDrawColor(u8g2, 1);
+    } 
+    xpix = (xpix+1) % 128;
+    sample = adc1_get_raw(ADC1_CHANNEL_6);
+    ypix = 20 - (((double ) sample/4096.0) * 20);
+    u8g2_DrawLine(u8g2, prevx, prevy, xpix, ypix);
+    u8g2_SendBuffer(u8g2);
+    prevx = xpix;
+    prevy = ypix;
   }
   vTaskDelete(NULL);
 }
