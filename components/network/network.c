@@ -71,7 +71,6 @@ void wifi_init_sta(void) {
 
 }
 
-void wifi_connect(void) {
-  ESP_LOGI(TAG, "Connecting to WiFi!");
+void initialize_wifi(void) {
   wifi_init_sta(); 
 }

@@ -6,4 +6,4 @@
 #define WIFI_CONNECTED_BIT BIT0
 #define WIFI_FAIL_BIT      BIT1
 
-void wifi_connect(void);
+void initialize_wifi(void);
