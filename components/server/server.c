@@ -20,6 +20,13 @@ httpd_uri_t statz_uri_handler = {
     .user_ctx  = NULL
 };
 
+httpd_uri_t control_uri_handler = {
+    .uri       = "/",
+    .method    = HTTP_GET,
+    .handler   = control_request_handler,
+    .user_ctx  = NULL
+};
+
 void param_value(httpd_req_t *req, char *key, char *buffer) {
   size_t buffer_length = httpd_req_get_url_query_len(req) + 1;
   char *tmp_queries_buffer = (char *) malloc(1024);
@@ -31,6 +38,21 @@ void param_value(httpd_req_t *req, char *key, char *buffer) {
       }
     }
   }
+}
+
+esp_err_t control_request_handler(httpd_req_t *req) {
+  char *response = (char *) malloc(2048);
+  char param[DEFAULT_PARAM_SIZE] = "";
+  param_value(req, "action", param);
+  if(strcmp(param, "stop_audio_sampling") == 0) {
+    storage_write("sample_audio", 0);
+    snprintf(response, 2048, "ACTION_PERFORMED: %s", param);
+    httpd_resp_send(req, response, HTTPD_RESP_USE_STRLEN);
+    return ESP_OK;
+  } 
+  snprintf(response, 2048, "UNABLE TO PERFORM ACTION: %s", param);
+  httpd_resp_send(req, response, HTTPD_RESP_USE_STRLEN);
+  return ESP_OK;
 }
 
 esp_err_t statz_request_handler(httpd_req_t *req){
@@ -48,6 +70,7 @@ httpd_handle_t start_webserver(void) {
   httpd_handle_t server = NULL;
   if (httpd_start(&server, &config) == ESP_OK) {
     httpd_register_uri_handler(server, &statz_uri_handler);
+    httpd_register_uri_handler(server, &control_uri_handler);
   }
   return server;
 }

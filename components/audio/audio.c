@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "audio.h"
+#include <stdint.h>
 #include "driver/adc.h"
 #include <driver/gpio.h>
 #include <freertos/FreeRTOS.h>
@@ -8,7 +9,7 @@
 #include "ssd1306.h"
 #include "u8g2.h"
 #include <math.h>
-
+#include "storage.h"
 
 void init_audio_mapping(u8g2_t *u8g2){
   int sample;
@@ -16,8 +17,12 @@ void init_audio_mapping(u8g2_t *u8g2){
   int ypix = 20;
   int prevx = 0;
   int prevy = 0;
+  int32_t audio_sampling_stop;
+
   while(true) {
-    vTaskDelay(5/portTICK_RATE_MS);
+    vTaskDelay(100/portTICK_RATE_MS);
+    storage_read("sample_audio", &audio_sampling_stop);
+    if(audio_sampling_stop == 0) break;
     if(xpix == 127) {
       u8g2_SetDrawColor(u8g2, 0);
       u8g2_DrawBox(u8g2, 0, 0, 128, 22);

@@ -6,8 +6,14 @@
 #include "esp_system.h"
 #include "nvs_flash.h"
 #include "esp_err.h"
+#include "esp_log.h"
 #include "nvs.h"
 #include <stddef.h>
+#include <sys/unistd.h>
+#include <sys/stat.h>
+#include "esp_spiffs.h"
+
+static const char *TAG = "[STORAGE] ";
 
 void initialize_storage() {
   esp_err_t error = nvs_flash_init();
@@ -53,3 +59,31 @@ void storage_read(const char *key, int32_t *value) {
   nvs_close(nvs_storage_handler);
 }
 
+
+void init_filesystem() {
+  esp_vfs_spiffs_conf_t conf = {
+    .base_path = "/root",
+    .partition_label = NULL,
+    .max_files = 5,
+    .format_if_mount_failed = true
+  };
+
+  esp_err_t ret = esp_vfs_spiffs_register(&conf);
+  ESP_ERROR_CHECK(ret);
+  size_t total = 0, used = 0;
+  if (ret != ESP_OK) {
+    ESP_LOGE(TAG, "Failed to get SPIFFS partition information (%s)", esp_err_to_name(ret));
+  } else {
+    ESP_LOGI(TAG, "Partition size: total: %d, used: %d", total, used);
+  }
+}
+
+void unmount_filesystem() {
+  esp_vfs_spiffs_conf_t conf = {
+    .base_path = "/root",
+    .partition_label = NULL,
+    .max_files = 5,
+    .format_if_mount_failed = true
+  };
+  esp_vfs_spiffs_unregister(conf.partition_label);
+}

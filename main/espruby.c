@@ -15,19 +15,22 @@
 #include <esp_http_server.h>
 
 char *tag = "[ESP32DEV] ";
+u8g2_t u8g2;
 
 void app_main(void) {
   u8g2_t *u8g2_pointer = (u8g2_t *) malloc(sizeof(u8g2_t));
-  u8g2_t u8g2 = *u8g2_pointer;
+  u8g2 = *u8g2_pointer;
 
+  initialize_storage();
   initialize_display();
   initialize_u8g2(&u8g2);
-  initialize_storage();
+
   xTaskCreate(&task_wifi_connect, "task_wifi_connect", 4096, NULL, 5, NULL);
   load_splash(&u8g2);
-  httpd_handle_t server = start_webserver();
+
+  start_webserver(); 
   load_network_info(&u8g2);
-  init_audio_mapping(&u8g2);
-  stop_webserver(server);
+  task_audio_mapping(&u8g2);
+
   fflush(stdout);
 }
