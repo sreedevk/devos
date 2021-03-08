@@ -156,7 +156,7 @@ void initialize_display() {
 
 
 void initialize_u8g2(u8g2_t *display_handler){
-  u8g2_Setup_ssd1306_i2c_128x32_univision_f(display_handler, U8G2_R0, u8g2_esp32_i2c_byte_cb, u8g2_esp32_gpio_and_delay_cb);
+  u8g2_Setup_sh1106_i2c_128x64_noname_f(display_handler, U8G2_R0, u8g2_esp32_i2c_byte_cb, u8g2_esp32_gpio_and_delay_cb);
 	u8x8_SetI2CAddress(&(display_handler->u8x8),0x78);
   u8g2_InitDisplay(display_handler);
   u8g2_SetPowerSave(display_handler, 0);

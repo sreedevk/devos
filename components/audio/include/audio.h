@@ -12,3 +12,4 @@
 
 void init_audio_mapping(u8g2_t *u8g2);
 void play_notes();
+void task_draw_sine(void *param);

@@ -10,6 +10,9 @@
 #include "u8g2.h"
 #include <math.h>
 #include "storage.h"
+#include "esp_log.h"
+
+static const char *tag = "Audio GFX";
 
 void init_audio_mapping(u8g2_t *u8g2){
   int sample;
@@ -59,4 +62,23 @@ void play_notes(){
     vTaskDelay(NOTE_C);
     vTaskDelay(100/portTICK_PERIOD_MS);
   }
+}
+
+void task_draw_sine(void *param) {
+  u8g2_t *u8g2 = (u8g2_t *) param;
+  u8g2_ClearBuffer(u8g2);
+
+  double y = 0, offset = 0;
+  double amplitude = 7, frequency = 0.5;
+
+  while(true) {
+    u8g2_ClearBuffer(u8g2);
+    for(double x = 0; x < 127; x++) {
+      y = (amplitude * round(sin((x + offset) * frequency))) + 32;
+      u8g2_DrawPixel(u8g2, x, y);
+    }
+    u8g2_SendBuffer(u8g2);
+    offset += 1;
+  }
+  vTaskDelete(NULL);
 }

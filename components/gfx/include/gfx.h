@@ -5,3 +5,4 @@
 
 void load_splash(u8g2_t *u8g2);
 void load_network_info(u8g2_t *u8g2);
+void load_bitmap(u8g2_t *u8g2);
